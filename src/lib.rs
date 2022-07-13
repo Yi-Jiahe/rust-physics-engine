@@ -12,6 +12,14 @@ pub struct World2D {
 
 #[wasm_bindgen]
 impl World2D {
+    pub fn new() -> World2D {
+        let bodies: Vec<Body2D> = Vec::new();
+
+        World2D {
+            bodies,
+        }
+    }
+
     pub fn add(&mut self, body: Body2D) {
         self.bodies.push(body);
     }
