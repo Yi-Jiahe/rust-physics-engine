@@ -1,1 +1,1 @@
-FROM mvlabat/wasm-pack
+FROM gitpod/workspace-wasm
