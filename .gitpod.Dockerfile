@@ -1,1 +1,1 @@
-FROM jdrouet/wasm-pack:latest
+FROM mvlabat/wasm-pack
