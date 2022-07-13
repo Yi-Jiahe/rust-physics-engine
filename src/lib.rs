@@ -12,6 +12,7 @@ pub struct World2D {
 
 #[wasm_bindgen]
 impl World2D {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> World2D {
         World2D {
             bodies: Vec::<Body2D>::new(),
@@ -47,6 +48,7 @@ impl Body2D {
 
 #[wasm_bindgen]
 impl Body2D {
+    #[wasm_bindgen(constructor)]
     pub fn new(mass: f32, position: Vec<f32>) -> Body2D {
         Body2D {
             mass,
