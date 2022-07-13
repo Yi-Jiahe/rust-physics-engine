@@ -1,0 +1,1 @@
+FROM jdrouet/wasm-pack:latest
