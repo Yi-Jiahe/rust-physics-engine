@@ -17,7 +17,7 @@ impl World2D {
     }
 
     pub fn update(&mut self, time_delta: f32) {
-        for &mut body in self.bodies {
+        for body in &mut self.bodies {
             body.update(time_delta);
         }
     }
