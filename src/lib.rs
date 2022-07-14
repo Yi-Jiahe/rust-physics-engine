@@ -2,7 +2,9 @@ extern crate wasm_bindgen;
 
 use wasm_bindgen::prelude::*;
 
-extern crate nalgebra as na;
+pub mod math;
+
+use crate::math::f32Vector2;
 
 #[wasm_bindgen]
 #[derive(Debug)]
@@ -34,27 +36,34 @@ impl World2D {
 #[derive(Debug)]
 pub struct Body2D {
     mass: f32,
-    position: na::Point2<f32>,
-    velocity: na::Vector2<f32>,
-    acceleration: na::Vector2<f32>,
+    position: f32Vector2,
+    velocity: f32Vector2,
+    acceleration: f32Vector2,
 }
 
 impl Body2D {
     fn update(&mut self, time_delta: f32) {
-        self.velocity *= na::Vector1::new(f32::powi(time_delta, 2));
-        self.position += self.velocity * na::Vector1::new(time_delta);
+        let delta_t_squared = f32::powi(time_delta, 2);
+        self.position = math::f32Vector2(
+            self.velocity.0 * time_delta + 0.5 * self.acceleration.0 * delta_t_squared,
+            self.velocity.1 * time_delta + 0.5 * self.acceleration.1 * delta_t_squared,
+        );
+        self.velocity = math::f32Vector2(
+            self.velocity.0 + self.acceleration.0 * time_delta,
+            self.velocity.1 + self.acceleration.1 * time_delta,
+        );
     }
 }
 
 #[wasm_bindgen]
 impl Body2D {
     #[wasm_bindgen(constructor)]
-    pub fn new(mass: f32, position: Vec<f32>) -> Body2D {
+    pub fn new(mass: f32, position: math::f32Vector2) -> Body2D {
         Body2D {
             mass,
-            position: na::point![position[0], position[1]],
-            velocity: na::vector![0.0, 0.0],
-            acceleration: na::vector![0.0, 0.0],
+            position,
+            velocity: math::f32Vector2(0.0, 0.0),
+            acceleration: math::f32Vector2(0.0, 0.0),
         }
     }
 }
@@ -66,7 +75,7 @@ mod tests {
     #[test]
     fn it_works() {
         let mut world = World2D::new();
-        world.add(Body2D::new(1.0, vec![0.0, 0.0]));
+        world.add(Body2D::new(1.0, math::f32Vector2(0.0, 0.0)));
 
         world.update(0.1);
 
