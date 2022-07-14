@@ -44,14 +44,14 @@ pub struct Body2D {
 impl Body2D {
     fn update(&mut self, time_delta: f32) {
         let delta_t_squared = f32::powi(time_delta, 2);
-        self.position = math::f32Vector2(
-            self.velocity.0 * time_delta + 0.5 * self.acceleration.0 * delta_t_squared,
-            self.velocity.1 * time_delta + 0.5 * self.acceleration.1 * delta_t_squared,
-        );
-        self.velocity = math::f32Vector2(
-            self.velocity.0 + self.acceleration.0 * time_delta,
-            self.velocity.1 + self.acceleration.1 * time_delta,
-        );
+        self.position = math::f32Vector2 {
+            x: self.velocity.x * time_delta + 0.5 * self.acceleration.x * delta_t_squared,
+            y: self.velocity.y * time_delta + 0.5 * self.acceleration.y * delta_t_squared,
+        };
+        self.velocity = math::f32Vector2 {
+            x: self.velocity.x + self.acceleration.y * time_delta,
+            y: self.velocity.x + self.acceleration.y * time_delta,
+        };
     }
 }
 
@@ -62,9 +62,13 @@ impl Body2D {
         Body2D {
             mass,
             position,
-            velocity: math::f32Vector2(0.0, 0.0),
-            acceleration: math::f32Vector2(0.0, 0.0),
+            velocity: math::f32Vector2 { x: 0.0, y: 0.0 },
+            acceleration: math::f32Vector2 { x: 0.0, y: 0.0 },
         }
+    }
+
+    pub fn get_position(&self) -> f32Vector2 {
+        self.position.clone()
     }
 }
 
@@ -73,9 +77,17 @@ mod tests {
     use super::*;
 
     #[test]
+    fn get_position_from_body() {
+        let body = Body2D::new(1.0, math::f32Vector2 { x: 1.2, y: 3.4 });
+        let position = body.get_position();
+        assert_eq!(position.x, 1.2);
+        assert_eq!(position.y, 3.4);
+    }
+
+    #[test]
     fn it_works() {
         let mut world = World2D::new();
-        world.add(Body2D::new(1.0, math::f32Vector2(0.0, 0.0)));
+        world.add(Body2D::new(1.0, math::f32Vector2 { x: 0.0, y: 0.0 }));
 
         world.update(0.1);
 
