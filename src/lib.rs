@@ -49,10 +49,9 @@ impl Body2D {
         };
 
         let delta_t_squared = f32::powi(time_delta, 2);
-        self.position = math::f32Vector2 {
-            x: self.velocity.x * time_delta + 0.5 * acceleration.x * delta_t_squared,
-            y: self.velocity.y * time_delta + 0.5 * acceleration.y * delta_t_squared,
-        };
+        self.position.x += self.velocity.x * time_delta + 0.5 * acceleration.x * delta_t_squared;
+        self.position.y += self.velocity.y * time_delta + 0.5 * acceleration.y * delta_t_squared;
+
         self.velocity = math::f32Vector2 {
             x: self.velocity.x + acceleration.y * time_delta,
             y: self.velocity.x + acceleration.y * time_delta,
@@ -74,6 +73,11 @@ impl Body2D {
 
     pub fn get_position(&self) -> f32Vector2 {
         self.position.clone()
+    }
+
+    pub fn apply_force(&mut self, force: f32Vector2) {
+        self.force.x += force.x;
+        self.force.y += force.y;
     }
 }
 
