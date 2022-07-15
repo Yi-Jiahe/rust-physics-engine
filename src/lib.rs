@@ -38,19 +38,24 @@ pub struct Body2D {
     mass: f32,
     position: f32Vector2,
     velocity: f32Vector2,
-    acceleration: f32Vector2,
+    force: f32Vector2,
 }
 
 impl Body2D {
     fn update(&mut self, time_delta: f32) {
+        let acceleration = math::f32Vector2 {
+            x: self.force.x / self.mass,
+            y: self.force.y / self.mass,
+        };
+
         let delta_t_squared = f32::powi(time_delta, 2);
         self.position = math::f32Vector2 {
-            x: self.velocity.x * time_delta + 0.5 * self.acceleration.x * delta_t_squared,
-            y: self.velocity.y * time_delta + 0.5 * self.acceleration.y * delta_t_squared,
+            x: self.velocity.x * time_delta + 0.5 * acceleration.x * delta_t_squared,
+            y: self.velocity.y * time_delta + 0.5 * acceleration.y * delta_t_squared,
         };
         self.velocity = math::f32Vector2 {
-            x: self.velocity.x + self.acceleration.y * time_delta,
-            y: self.velocity.x + self.acceleration.y * time_delta,
+            x: self.velocity.x + acceleration.y * time_delta,
+            y: self.velocity.x + acceleration.y * time_delta,
         };
     }
 }
@@ -63,7 +68,7 @@ impl Body2D {
             mass,
             position,
             velocity: math::f32Vector2 { x: 0.0, y: 0.0 },
-            acceleration: math::f32Vector2 { x: 0.0, y: 0.0 },
+            force: math::f32Vector2 { x: 0.0, y: 0.0 },
         }
     }
 
